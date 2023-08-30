@@ -1,8 +1,9 @@
-# vue-admin-template
+# manage-portal   
+# 南京证券经营门户
 
 
 # 进入项目目录
-cd vue-admin-template
+cd manage-portal
 
 # 安装依赖
 npm isntall -g  hui-tool
