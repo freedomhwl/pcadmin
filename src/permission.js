@@ -27,9 +27,8 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       try {
-        // get user info
-        await store.dispatch('user/getAuthMenu', {})
-
+        // get user info;
+        await Promise.all([store.dispatch('user/getRoleList', {}), store.dispatch('user/getAuthMenu', {})])
         next()
       } catch (error) {
         // remove token and go to login page to re-login

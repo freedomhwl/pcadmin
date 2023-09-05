@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 import getters from './getters'
 import app from './modules/app'
 import settings from './modules/settings'
@@ -13,7 +14,16 @@ const store = new Vuex.Store({
     settings,
     user
   },
-  getters
+  getters,
+  plugins: [createPersistedState({
+    paths: ['user']
+    // reducer(val) {
+    //   return {
+    //     name: val.user.name,
+    //     userCode: val.user.userCode
+    //   }
+    // }
+  })]
 })
 
 export default store

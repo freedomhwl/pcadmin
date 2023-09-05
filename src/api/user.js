@@ -16,6 +16,14 @@ export function getAuthMenu(data) {
   })
 }
 
+export function getRoleList(data) {
+  return request({
+    url: '/ms/g/hsxone.omc/v/getCurrUserInfo',
+    method: 'post',
+    data
+  })
+}
+
 export function logout() {
   return request({
     url: '/vue-admin-template/user/logout',

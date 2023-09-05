@@ -1,4 +1,4 @@
-import { login, getAuthMenu } from '@/api/user'
+import { login, getAuthMenu, getRoleList } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -6,7 +6,9 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    authMenu: []
+    userCode: '',
+    authMenu: [],
+    userRoleList: []
   }
 }
 
@@ -21,6 +23,12 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name
+  },
+  SET_CODE: (state, code) => {
+    state.userCode = code
+  },
+  SET_ROLELIST: (state, list) => {
+    state.userRoleList = list
   },
   SET_AUTHMENU: (state, authMenu) => {
     state.authMenu = authMenu
@@ -37,11 +45,30 @@ const actions = {
         if (data.return_code === '0') {
           commit('SET_TOKEN', data.user_token)
           commit('SET_NAME', data.nick_name)
+          commit('SET_CODE', data.operator_code)
           setToken(data.user_token)
           resolve()
         } else {
           reject(data)
         }
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+
+  // get role list
+  getRoleList({ commit, state }) {
+    return new Promise((resolve, reject) => {
+      getRoleList({ 'operator_code': state.userRoleList }).then(response => {
+        const { data } = response
+
+        if (!data) {
+          return reject('roles get failed, please Login again.')
+        }
+        const roles = data.user_role_list
+        commit('SET_ROLELIST', roles)
+        resolve(data)
       }).catch(error => {
         reject(error)
       })
@@ -55,7 +82,7 @@ const actions = {
         const { data } = response
 
         if (!data) {
-          return reject('Verification failed, please Login again.')
+          return reject('menu get failed, please Login again.')
         }
         commit('SET_AUTHMENU', data)
         resolve(data)
